@@ -24,9 +24,6 @@ firebase.analytics();
 
 // export default firebase;
 
-
-
-
 ReactDOM.render(
   <React.StrictMode>
     <App />

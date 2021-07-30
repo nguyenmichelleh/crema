@@ -92,6 +92,9 @@ export default function Form() {
     
     };
 
+    
+
+
     // const signOut = document.querySelector('#logout');
     // logout.addEventListener('click', (event) => {
     //     event.preventDefault();
@@ -123,6 +126,8 @@ export default function Form() {
                 </label>
                 </form>
 
+
+                <h4>Please fill out your profile information below: </h4>
                 <p>First name:</p>
                 <input type="text" onChange={handleOnChangeFirstName} value={firstName} />
                 <p>Last name:</p>
@@ -140,7 +145,10 @@ export default function Form() {
                 <button onClick={createUser} >Create Account</button>
                 <br></br>
                 <button onClick={signIn} >Sign Into Existing Account</button>
-                
+                <br></br>
+
+
+  
 
         </div>
     )
