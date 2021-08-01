@@ -1,8 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
 import firebase from 'firebase';
+import { UserContext, useUser, UserContextProvider} from "../context/userContext"
+
 
 export default function Form() {
+
+// test
+
+// useUser() - hooks are magic, not a function being called
+
+    const[currentUser, setUser] = useUser()
 
     const[newUser, setNewUser] = React.useState({
         email: "",
@@ -83,7 +91,35 @@ export default function Form() {
             .then((userCredential) => {
             // Signed in
             var user = userCredential.user;
+            // setUser(user)
             // ...
+
+            const dbRef = firebase.database().ref();
+            dbRef.child("users").child(userCredential.user.uid).get().then((snapshot) => {
+            if (snapshot.exists()) {
+
+                setUser(snapshot.val())
+
+                // JSON.stringify(snapshot.val())
+
+
+                // const currentProfile = snapshot.val();
+                // const profileStats = []
+
+                // for (let dataKey in currentProfile) {
+                //     console.log(dataKey)
+                //     profileStats.push(currentProfile[dataKey]);
+                // }
+
+                // setUser(profileStats[3])
+                // console.log(profileStats)
+
+            } else {
+                console.log("No data available");
+            }
+            }).catch((error) => {
+            console.error(error);
+            });
             })
             .catch((error) => {
             var errorCode = error.code;
@@ -92,14 +128,47 @@ export default function Form() {
     
     };
 
-    
+    const signOut = () => {
+
+
+        firebase.auth().signOut().then(() => {
+            // Sign-out successful.
+            console.log("Signed out!")
+          }).catch((error) => {
+            // An error happened.
+          });
+
+        setUser(null)
+
+    }
+
 
 
     // const signOut = document.querySelector('#logout');
-    // logout.addEventListener('click', (event) => {
+    // signOut.addEventListener('click', (event) => {
     //     event.preventDefault();
-    //     auth.signOut()
+    //     firebase().auth.signOut().then(()=>{
+    //         console.log("Logged out!");
+    //         setUser(null)
+    //     })
     // })
+
+
+    if (currentUser !== null) {
+        return (
+          <button type="button" onClick={signOut}>
+            Log out
+          </button>
+        );
+      }
+
+    // if (currentUser !== null) {
+    //     return (
+    //       <button id="logout" type="button" onClick={() => setUser(null)}>
+    //         Log out
+    //       </button>
+    //     );
+    //   }
 
     return (
         <div>
@@ -144,11 +213,11 @@ export default function Form() {
                 <br></br>
                 <button onClick={createUser} >Create Account</button>
                 <br></br>
-                <button onClick={signIn} >Sign Into Existing Account</button>
+                
+
+                <button onClick={signIn} >Log In</button> 
                 <br></br>
 
-
-  
 
         </div>
     )
