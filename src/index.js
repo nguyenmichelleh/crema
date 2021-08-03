@@ -9,7 +9,7 @@ require('dotenv').config()
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional */}
 var firebaseConfig = {
-  apiKey: "AIzaSyCHXF9h-IKdvfR9_LIjpGpyH3IildXb3Co",
+  apiKey: ,
   authDomain: "crema-cal.firebaseapp.com",
   databaseURL: "https://crema-cal-default-rtdb.firebaseio.com",
   projectId: "crema-cal",

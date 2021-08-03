@@ -17,6 +17,7 @@ export default function Profile() {
             <p>{user === null ? "Please log in to view profile." : `Favorite Drink: ${user.favDrink}`}</p>
             <p>{user === null ? "Please log in to view profile." : `Favorite Cafe: ${user.favCafe}`}</p>
             <p>{user === null ? "Please log in to view profile." : `Bio: ${user.bio}`}</p>
+            <p>{user === null ? "Please log in to view profile." : `Unique ID: ${user.UID}`}</p>
             
         </div>
     

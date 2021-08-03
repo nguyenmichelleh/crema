@@ -6,8 +6,6 @@ import { UserContext, useUser, UserContextProvider} from "../context/userContext
 
 export default function Form() {
 
-// test
-
 // useUser() - hooks are magic, not a function being called
 
     const[currentUser, setUser] = useUser()
@@ -60,9 +58,6 @@ export default function Form() {
 
         firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
             .then((userCredential) => {
-            // Signed in 
-            // userCredential.user.uid
-            // var user = userCredential.user;  
 
             const userRef = firebase.database().ref("/users"); // where you push
                 // user.uid is child to user document
@@ -89,30 +84,23 @@ export default function Form() {
 
         firebase.auth().signInWithEmailAndPassword(newUser.email, newUser.password)
             .then((userCredential) => {
-            // Signed in
             var user = userCredential.user;
-            // setUser(user)
-            // ...
+
 
             const dbRef = firebase.database().ref();
             dbRef.child("users").child(userCredential.user.uid).get().then((snapshot) => {
             if (snapshot.exists()) {
 
-                setUser(snapshot.val())
+                console.log(snapshot.val())
+                console.log(userCredential.user.uid)
 
-                // JSON.stringify(snapshot.val())
+                const userSnapshot = snapshot.val()
+                userSnapshot["UID"] = userCredential.user.uid
 
+                console.log(userSnapshot)
 
-                // const currentProfile = snapshot.val();
-                // const profileStats = []
+                setUser(userSnapshot)
 
-                // for (let dataKey in currentProfile) {
-                //     console.log(dataKey)
-                //     profileStats.push(currentProfile[dataKey]);
-                // }
-
-                // setUser(profileStats[3])
-                // console.log(profileStats)
 
             } else {
                 console.log("No data available");
@@ -133,7 +121,7 @@ export default function Form() {
 
         firebase.auth().signOut().then(() => {
             // Sign-out successful.
-            console.log("Signed out!")
+            console.log(firebase.auth().currentUser)
           }).catch((error) => {
             // An error happened.
           });
@@ -142,16 +130,6 @@ export default function Form() {
 
     }
 
-
-
-    // const signOut = document.querySelector('#logout');
-    // signOut.addEventListener('click', (event) => {
-    //     event.preventDefault();
-    //     firebase().auth.signOut().then(()=>{
-    //         console.log("Logged out!");
-    //         setUser(null)
-    //     })
-    // })
 
 
     if (currentUser !== null) {

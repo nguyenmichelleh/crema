@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { createContext, useContext, useState } from 'react';
 import { UserContext, useUser, UserContextProvider} from "./context/userContext"
 
+
 // define outside of App so that Navbar def is not recreated each render
 // useUser allows different parts of your application to listen for changes to the user
 // useUser lets you subscribe to changes in the user
@@ -27,6 +28,9 @@ const Navbar = () => {
 
 
 function App() {  
+
+  // set persistence if you don't want refresh to sign you out
+  console.log(firebase.auth().currentUser)
 
   return (
     <UserContextProvider>
@@ -48,6 +52,7 @@ function App() {
           <Switch>
             <Route path="/signin" exact component={Form} />
             <Route path="/mycrema" exact component={Profile} />
+            <Route path="/cremacal" exact component={Calendar} />
 
           </Switch>
 
