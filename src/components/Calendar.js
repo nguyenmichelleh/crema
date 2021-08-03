@@ -36,21 +36,43 @@ export default function Calendar() {
         var eventsRef = firebase.database().ref('events');
         var newEventRef = eventsRef.push();
         newEventRef.set({
-              title: title,
-              start: start,
+            UID: user.UID,
+            title: title,
+            start: start,
         });
 
-        // if i add UID: user.uid, app cannot read null?
-        // if i take out UID, data still does not show up
+        // push to users document an arr of events?
+
+        // the events array needs to hold 
+        // events={[
+        //     { title: 'event 1', date: '2019-04-01' },
+        //     { title: 'event 2', date: '2019-04-02' }
+        //   ]}
+        // add unique events identifier as ID of event for clickability later
+        // is this going to have to render on useEffect?
+        const eventsArr = []
+
         const dbRef = firebase.database().ref();
         dbRef.child("events").get().then((snapshot) => {
-            setEvents(snapshot.val())
 
+            console.log(snapshot.val())
+            const events = snapshot.val()
+
+            for (const event in events) {
+                const singleEvent = {}
+                var eventDetails = events[event]
+                singleEvent["id"] = event
+                singleEvent["title"] = eventDetails.title
+                singleEvent["start"] = eventDetails.start 
+                eventsArr.push(singleEvent)
+
+                // for (const i in eventDetails) {
+                //     console.log(`${event} holds ${eventDetails[i]}`)
+                // }
+            }
+            setEvents(eventsArr)
         }
-
         )
-        
-
     };
 
       return (
@@ -74,8 +96,8 @@ export default function Calendar() {
         <FullCalendar
           plugins={[ dayGridPlugin ]}
           initialView="dayGridMonth"
-          events={[events
-          ]}
+          events={events}
+        //   events={[{id: 22, title: 'cat', start: '2021-08-03'}]}
         />
         </div>
       )
