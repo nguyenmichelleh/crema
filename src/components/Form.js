@@ -118,7 +118,6 @@ export default function Form() {
 
     const signOut = () => {
 
-
         firebase.auth().signOut().then(() => {
             // Sign-out successful.
             console.log(firebase.auth().currentUser)
@@ -129,7 +128,6 @@ export default function Form() {
         setUser(null)
 
     }
-
 
 
     if (currentUser !== null) {

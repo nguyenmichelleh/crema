@@ -1,16 +1,48 @@
 
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { UserContext, useUser, UserContextProvider} from "../context/userContext"
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import listPlugin from '@fullcalendar/list'
 
 export default function Calendar() {
+
+    const calendarAlert = (info) => {
+        alert(`CremaRun Title: ${info.event.title}\nCremaRun Start:  ${info.event.start}`)
+    }
     
     const [user] = useUser();
 
     const[events, setEvents] = useState([])
+
+    useEffect (() => {
+
+        const eventsArr = []
+
+        const dbRef = firebase.database().ref();
+        dbRef.child("events").get().then((snapshot) => {
+
+            console.log(snapshot.val())
+            const events = snapshot.val()
+
+            for (const event in events) {
+                const singleEvent = {}
+                var eventDetails = events[event]
+                singleEvent["id"] = event
+                singleEvent["title"] = eventDetails.title
+                singleEvent["start"] = eventDetails.start 
+                eventsArr.push(singleEvent)
+            }
+
+            setEvents(eventsArr)
+        }
+        )
+
+    }, [])
+
 
     // const[userID, setUserID] = useState('');
     const[title, setTitle] = useState('');
@@ -40,6 +72,8 @@ export default function Calendar() {
             title: title,
             start: start,
         });
+
+        
 
         // push to users document an arr of events?
 
@@ -75,6 +109,18 @@ export default function Calendar() {
         )
     };
 
+
+    function renderEventContent(eventInfo) {
+        return (
+          <>
+            <b>{eventInfo.timeText}</b>
+            <i>{eventInfo.event.title}</i>
+          </>
+        )
+      }
+
+
+
       return (
 
         <div>
@@ -94,11 +140,13 @@ export default function Calendar() {
             <h1>CremaCal</h1>
 
         <FullCalendar
-          plugins={[ dayGridPlugin ]}
+          plugins={[ dayGridPlugin, interactionPlugin, listPlugin ]}
           initialView="dayGridMonth"
           events={events}
-        //   events={[{id: 22, title: 'cat', start: '2021-08-03'}]}
+          eventClick={calendarAlert}
         />
+
+
         </div>
       )
     }
