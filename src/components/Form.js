@@ -96,6 +96,8 @@ export default function Form() {
 
                 const userSnapshot = snapshot.val()
                 userSnapshot["UID"] = userCredential.user.uid
+                // to iterate over and access later
+                // userSnapshot["eventsOfInterest"] = userSnapshot.eventsOfInterest.split()
 
                 console.log(userSnapshot)
 

@@ -3,27 +3,16 @@ import { useState } from 'react';
 import firebase from 'firebase';
 import { UserContext, useUser, UserContextProvider} from "../context/userContext"
 import EventList from "./EventList"
+import AttendingList from "./AttendingList"
 
 export default function Profile() {
     
     const [user] = useUser();
     const [myEvents, setMyEvents] = useState([])
+    const [eventsAttending, setEventsAttending] = useState([])
 
-    const generateEventString = () => {
-      let output = ""
-          
-      for (const item in myEvents) {
-        
-        var myEventDetails = myEvents[item]
-        output += `Title: ${myEventDetails.title} `
-        output += `Start: ${myEventDetails.start} `
-        // console.log(myEventDetails.title)
-        // console.log(myEventDetails.start)
-      }
-      return output
-    }
 
-    const viewCremaRuns = () => {
+    const viewMyCremaRuns = () => {
 
       const eventsArr = []
 
@@ -35,7 +24,6 @@ export default function Profile() {
   
           for (const event in events) {
               const singleEvent = {}
-              const singleEventArr = []
               var eventDetails = events[event]
 
               // console.log(eventDetails.UID)
@@ -45,12 +33,12 @@ export default function Profile() {
                 singleEvent["id"] = event
                 singleEvent["title"] = eventDetails.title
                 singleEvent["start"] = eventDetails.start 
+                singleEvent["location"] = "Nebraska"
                 eventsArr.push(singleEvent)
 
                 // singleEventArr.push(event, eventDetails.title, eventDetails.start)
                 // eventsArr.push(singleEventArr)
               }
-  
   
               // for (const i in eventDetails) {
               //     console.log(`${event} holds ${eventDetails[i]}`)
@@ -58,8 +46,6 @@ export default function Profile() {
           }
   
           setMyEvents(eventsArr)
-
-          // let output = ""
           
           for (const item in myEvents) {
             
@@ -75,6 +61,38 @@ export default function Profile() {
       )
     }
 
+    const viewRunsAttending = () => {
+
+      const dbRef = firebase.database().ref();
+
+      dbRef.child('attendees').orderByChild(user.UID).equalTo(true).on("value", function(snapshot) {
+        console.log(snapshot.val()); // object of objects, all {eventIDs: {userIDs..}}
+        snapshot.forEach(function(data) {
+            console.log(data.key); // all eventIDs
+        });
+
+        // setEventsAttending(Object.keys(snapshot.val())) // array of all eventIDs
+      
+      const eventsAttendingArr = []
+
+      const eventIDs = Object.keys(snapshot.val()) // array of all eventIDs
+
+      eventIDs.map(id => {
+        return dbRef.child('events').child(id).on('value', function(snapshot) {
+            console.log(snapshot.val());
+            eventsAttendingArr.push(snapshot.val())
+            setEventsAttending(eventsAttendingArr)
+            console.log(eventsAttending)
+
+        })
+
+      });
+
+
+    });
+
+
+    }
 
 
     return (
@@ -89,11 +107,13 @@ export default function Profile() {
             <p>{user === null ? "Please log in to view profile." : `Bio: ${user.bio}`}</p>
             <p>{user === null ? "Please log in to view profile." : `Unique ID: ${user.UID}`}</p>
 
-            <button onClick={viewCremaRuns} >View My CremaRuns</button>
+            <button onClick={viewMyCremaRuns} >View My CremaRuns</button>
+            <button onClick={viewRunsAttending} >View CremaRuns I'd Like to Attend</button>
+            <h4>CremaRuns: Host</h4>
             <EventList eventsArr={myEvents}/>
-
-            <p>{generateEventString()}</p>
-
+            <br></br>
+            <h4>CremaRuns: Attendee</h4>
+            <AttendingList eventsArr ={eventsAttending}/>
 
             
         </div>

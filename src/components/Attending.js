@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Event = (props) => {
+const Attending = (props) => {
 
 
     return <div>
@@ -12,4 +12,4 @@ const Event = (props) => {
 };
 
 
-export default Event;
+export default Attending;

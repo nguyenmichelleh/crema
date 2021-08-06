@@ -26,7 +26,6 @@ const Navbar = () => {
 };
 
 
-
 function App() {  
 
   // set persistence if you don't want refresh to sign you out

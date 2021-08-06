@@ -5,7 +5,7 @@ import Event from "./Event"
 const EventList = (props) => {
 
 return props.eventsArr.map((event) => {
-    return <Event key={event.id} title={event.title} start={event.start}/>
+    return <Event key={event.id} title={event.title} start={event.start} location={event.location}/>
     });
 
 };
