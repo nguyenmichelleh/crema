@@ -10,7 +10,7 @@ const AttendingList = (props) => {
 
     return props.eventsArr.map((event) => {
         console.log(event)
-        return <Attending key={event.title} title={event.title} start={event.start} location={event.location}/>
+        return <Attending key={event.title} title={event.title} start={event.start} end={event.end} location={event.location}/>
         });
 
 }

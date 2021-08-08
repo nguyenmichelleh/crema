@@ -1,0 +1,51 @@
+{
+    "events": {
+        "eventID1": {
+            "creatorId": "asdfasdfasdf",
+            "start": "timestamp",
+            "title": "hello world!",
+        }
+    }
+    "users": {
+        "userID1": {
+            "key": "value"
+            ...
+        }
+    }
+    "attendees": {
+        "eventID1": {
+            "userID1": true,
+            "userID2": true
+        }
+    }
+}
+
+
+
+        const dbRef = firebase.database().ref();
+        dbRef.child("attendees").child(eventInfoModal.event.id).replace({
+
+        })
+        
+        get().then((snapshot) => {
+
+            const events = snapshot.val()
+            console.log(events)
+            console.log(eventInfoModal.start)
+
+            for (const event in events) {
+                if (eventInfoModal.event.id === event ) {
+                    
+                    if (event.guests) {
+                        dbRef.child(event.guests).update(user.UID)
+                    } else {
+                        event.guests = user.UID
+                    }
+
+                    } 
+                    
+                }
+            
+            
+    })
+}
