@@ -18,12 +18,14 @@ export default function Calendar() {
     // open modal based on event info
     const [eventInfoModal, setEventInfoModal] = React.useState(false);
 
+    // Modal.setAppElement('body');
+
     
     useEffect (() => {
 
-        const eventsArr = []
+        // Modal.setAppElement('body');
 
-        Modal.setAppElement('#root');
+        const eventsArr = []
 
         const dbRef = firebase.database().ref();
         dbRef.child("events").get().then((snapshot) => {
@@ -169,34 +171,92 @@ export default function Calendar() {
                     dbRef.child("events").child(eventInfoModal.event.id).remove() // this worked like two seconds ago?
                     dbRef.child("attendees").child(eventInfoModal.event.id).remove() 
                     console.log("Event deleted!")
+                } else {
+                    console.log("You can't do that!")
                 }
             }
+
+            const eventsArr = []
+            dbRef.child("events").get().then((snapshot) => {
+    
+                const events = snapshot.val()
+    
+                for (const event in events) {
+                    const singleEvent = {}
+                    var eventDetails = events[event]
+                    singleEvent["id"] = event
+                    singleEvent["title"] = eventDetails.title
+                    singleEvent["start"] = eventDetails.start
+                    singleEvent["end"] = eventDetails.end
+                    eventsArr.push(singleEvent)
+                }
+    
+                setEvents(eventsArr)
+            }
+            )
+    
+            setEventInfoModal(false);
+
         }
         )
         // // close modal
         // setEventInfoModal(false);
 
-        const eventsArr = []
+
+    };
+
+    const updateCremaRun = () => {
+        
+        // 1. obtain info for clicked event
+        // 2. update under events doc
+        // 3. obtain updated events array
+        // 4. pass through Fullcalendar component
+        // 5. if you have time, user.UID should equal event creator UID
+
+        const dbRef = firebase.database().ref();
+
         dbRef.child("events").get().then((snapshot) => {
-
+    
             const events = snapshot.val()
-
-            for (const event in events) {
-                const singleEvent = {}
+    
+            for (const event in events) { 
                 var eventDetails = events[event]
-                singleEvent["id"] = event
-                singleEvent["title"] = eventDetails.title
-                singleEvent["start"] = eventDetails.start
-                singleEvent["end"] = eventDetails.end
-                eventsArr.push(singleEvent)
+    
+                if (eventDetails.UID === user.UID) {
+                    dbRef.child("events").child(eventInfoModal.event.id).update({
+                        title: title,
+                        start: start,
+                        end: end,
+                        location: location,
+                    })
+
+                    console.log("Event updated!")
+                }
             }
 
-            setEvents(eventsArr)
+            const eventsArr = []
+            dbRef.child("events").get().then((snapshot) => {
+    
+                const events = snapshot.val()
+    
+                for (const event in events) {
+                    const singleEvent = {}
+                    var eventDetails = events[event]
+                    singleEvent["id"] = event
+                    singleEvent["title"] = eventDetails.title
+                    singleEvent["start"] = eventDetails.start
+                    singleEvent["end"] = eventDetails.end
+                    eventsArr.push(singleEvent)
+                }
+    
+                setEvents(eventsArr)
+            }
+            )
+    
+            setEventInfoModal(false);
+
         }
         )
-
-        setEventInfoModal(false);
-
     };
 
 
@@ -265,29 +325,71 @@ export default function Calendar() {
             </div>
 
             <br></br>
-   
-            <Modal
-                isOpen={eventInfoModal}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                // ariaHideApp={false}
-                contentLabel="Example Modal"
-            >
-                <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Join CremaRun</h2>
-                <div>Are you interested in attending this event?</div>
-                <br></br>
-                <p>{eventInfoModal === false ? 'No data available' : `Title: ${eventInfoModal.event.title}`}</p>
-                <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
-                <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
-                <br></br>
-                <Button variant="outline-dark" onClick={joinCremaRun}>Join CremaRun ✅</Button> <Button variant="outline-dark" onClick={closeModal}>No, thank you! ❎</Button>
+            <div className="modalContent">
+                <Modal
+                    isOpen={eventInfoModal}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    contentLabel="Example Modal"
+                    // ariaHideApp={false}
+                    appElement={document.getElementById('app')}
+                >
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Join CremaRun</h2>
+                    <div>Are you interested in attending this event?</div>
+                    <br></br>
+                    <p>{eventInfoModal === false ? 'No data available' : `Title: ${eventInfoModal.event.title}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
+                    <br></br>
+                    <Button variant="outline-dark" onClick={joinCremaRun}>Join CremaRun ✅</Button> <Button variant="outline-dark" onClick={closeModal}>No, thank you! ❎</Button>
 
-                <br></br>
-                <br></br>
-                <br></br>
-                <p>You can only delete CremaRuns you host.</p>
-                <Button variant="warning" onClick={deleteCremaRun}>Delete CremaRun </Button>
-            </Modal>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <p>You can only delete CremaRuns you host.</p>
+                    <Button variant="warning" onClick={deleteCremaRun}>Delete CremaRun </Button>
+
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <Form>
+                    <h4>Update Event</h4>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Title:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={title}
+                            onChange={handleOnChangeTitle}
+                            placeholder="Python over Coffee" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Start:</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            value={start}
+                            onChange={handleOnChangeStart} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>End:</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            value={end}
+                            onChange={handleOnChangeEnd} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Location:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={location}
+                            onChange={handleOnChangeLocation}
+                            placeholder="Starbucks Shibuya Tsutaya" />
+                    </Form.Group>
+                    </Form>
+                    <Button variant="dark" onClick={updateCremaRun} >Update CremaRun</Button>
+
+                </Modal>
+            </div>
+
     
         </div>
       )

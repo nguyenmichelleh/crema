@@ -61,6 +61,19 @@
   padding-top: 50px;
 }
 
+.modalContent {
+  display: flex;
+}
+
+.modalFormat {
+  flex: 1;
+  padding-right: 50px;
+}
+
+.test {
+  flex: 1;
+}
+
 .leftHalf {
   flex: 1;
   padding-left: 55px;
