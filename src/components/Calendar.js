@@ -44,7 +44,7 @@ export default function Calendar() {
         }
         )
 
-    },[])
+    },[]) // if i only render this the first time the render after delete doesnt upate events, if i delete a second time it renders the first change?
 
     let subtitle;
 
@@ -56,7 +56,7 @@ export default function Calendar() {
   
     function afterOpenModal() {
       // references are now sync'd and can be accessed.
-      subtitle.style.color = '#ff4d6d';
+      subtitle.style.color = '#c9184a';
     }
   
     function closeModal() {
@@ -119,6 +119,9 @@ export default function Calendar() {
             attendees: currentUserObj
         });
 
+        // const attendeesRef = firebase.database().ref("/attendees");
+        // attendeesRef.child(eventInfoModal.event.id).update(currentUserObj);
+
         const eventsArr = []
         const dbRef = firebase.database().ref();
         dbRef.child("events").get().then((snapshot) => {
@@ -140,8 +143,60 @@ export default function Calendar() {
             }
             setEvents(eventsArr)
             console.log(eventsArr)
+
         }
         )
+    };
+
+    const deleteCremaRun = () => {
+        
+        // 1. obtain info for clicked event
+        // 2. remove from database (2 places)
+        // 3. obtain updated events array
+        // 4. pass through Fullcalendar component
+        // 5. if you have time, user.UID should equal event creator UID
+
+        const dbRef = firebase.database().ref();
+
+        dbRef.child("events").get().then((snapshot) => {
+    
+            const events = snapshot.val()
+    
+            for (const event in events) {
+                var eventDetails = events[event]
+    
+                if (eventDetails.UID === user.UID) {
+                    dbRef.child("events").child(eventInfoModal.event.id).remove() // this worked like two seconds ago?
+                    dbRef.child("attendees").child(eventInfoModal.event.id).remove() 
+                    console.log("Event deleted!")
+                }
+            }
+        }
+        )
+        // // close modal
+        // setEventInfoModal(false);
+
+        const eventsArr = []
+        dbRef.child("events").get().then((snapshot) => {
+
+            const events = snapshot.val()
+
+            for (const event in events) {
+                const singleEvent = {}
+                var eventDetails = events[event]
+                singleEvent["id"] = event
+                singleEvent["title"] = eventDetails.title
+                singleEvent["start"] = eventDetails.start
+                singleEvent["end"] = eventDetails.end
+                eventsArr.push(singleEvent)
+            }
+
+            setEvents(eventsArr)
+        }
+        )
+
+        setEventInfoModal(false);
+
     };
 
 
@@ -162,7 +217,7 @@ export default function Calendar() {
             <button id="addButton" onClick={addCremaRun}>Add Crema Run</button> */}
 
             <div className="leftHalfCalendar">
-                <h1>CremaCal ☕</h1>
+                <h1>CremaCal 🍵</h1>
                 <br></br>
                 <Form>
                 <h4>CremaRun Scheduler</h4>
@@ -225,7 +280,13 @@ export default function Calendar() {
                 <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
                 <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
                 <br></br>
-                <Button variant="dark" onClick={joinCremaRun}>Join CremaRun ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you! ❎</Button>
+                <Button variant="outline-dark" onClick={joinCremaRun}>Join CremaRun ✅</Button> <Button variant="outline-dark" onClick={closeModal}>No, thank you! ❎</Button>
+
+                <br></br>
+                <br></br>
+                <br></br>
+                <p>You can only delete CremaRuns you host.</p>
+                <Button variant="warning" onClick={deleteCremaRun}>Delete CremaRun </Button>
             </Modal>
     
         </div>

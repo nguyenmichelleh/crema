@@ -32,18 +32,19 @@ function App() {
         
         <Router>
 
+          <h3 className="cremaTitle">CREMA ☺</h3>
           <div className="navbarFormat">
-            <h3>CREMA</h3>
             <Navbar>
-              <Nav>
-                <NavItem><Nav.Link as={Link} to="/"> Home </Nav.Link></NavItem>
-                <NavItem><Nav.Link as={Link} to="/signin"> Sign In </Nav.Link></NavItem>
-                <NavItem><Nav.Link as={Link} to="/cremacal"> CremaCal </Nav.Link></NavItem>
-                <NavItem><Nav.Link as={Link} to="/mycrema"> MyCrema </Nav.Link></NavItem>
+              <Nav className="ml-auto">
+                <NavItem><Nav.Link as={Link} to="/"> Home  </Nav.Link></NavItem>
+                <NavItem><Nav.Link as={Link} to="/signin"> Sign In  </Nav.Link></NavItem>
+                <NavItem><Nav.Link as={Link} to="/cremacal"> CremaCal  </Nav.Link></NavItem>
+                <NavItem><Nav.Link as={Link} to="/mycrema"> MyCrema  </Nav.Link></NavItem>
                 {/* <Link to="/mycrema"> MyCrema </Link> */}
                 </Nav>
             </Navbar>
           </div>
+
 
           <Switch>
             <Route path="/" exact component={Home} />

@@ -136,7 +136,7 @@ export default function Profile() {
             <br></br>
             <Card style={{ width: '35rem' }}>
               <Card.Body>
-                <Card.Title>MyCrema Profile</Card.Title>
+                  <Card.Title>MyCrema Profile ☼</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{user === null ? "Please log in to view profile." : `${user.firstName} ${user.lastName}, ${user.pronouns}`}</Card.Subtitle>
                 <p>{user === null ? " " : `♡ ${user.favDrink}`}</p>
                 <p>{user === null ? " " : `♡ ${user.favCafe}`}</p>
