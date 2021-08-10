@@ -129,7 +129,7 @@ export default function SignInForm() {
     if (currentUser !== null) {
         return (
             <div className="loginSuccess">
-                <div>{user === null ? '': `You're logged in, ${user.firstName}`}</div>
+                <div>{user === null ? '': `Welcome to Crema.  You're logged in, ${user.firstName}.`}</div>
                 <br></br>
                 <Button variant="outline-secondary" onClick={signOut}>Log Out</Button>
             </div>

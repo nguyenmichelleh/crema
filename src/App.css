@@ -32,6 +32,16 @@
   justify-content: center;
 }
 
+.aboutFormat {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-right: 250px;
+  padding-left: 250px;
+}
+
 .signInFormat {
   min-height: 100vh;
   display: flex;
