@@ -151,6 +151,7 @@ export default function SignInForm() {
             <div className="leftHalf">
                 <Form>
                     <h4>Sign In</h4>
+                    <br></br>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>E-mail address:</Form.Label>
                         <Form.Control
@@ -207,6 +208,7 @@ export default function SignInForm() {
             <div className="rightHalf">
                 <Form>
                 <h4>New user?  Please fill out your profile below to join: </h4>
+                <br></br>
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>E-mail address:</Form.Label>
@@ -256,7 +258,7 @@ export default function SignInForm() {
                         type="text"
                         value={favDrink}
                         onChange={handleOnChangeFavDrink}
-                        placeholder="ca phe la dua da" />
+                        placeholder="iced mocha" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Favorite cafe:</Form.Label>
@@ -264,7 +266,7 @@ export default function SignInForm() {
                         type="text"
                         value={favCafe}
                         onChange={handleOnChangeFavCafe}
-                        placeholder="Hello Em" />
+                        placeholder="Seattle Coffee Works" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Bio</Form.Label>

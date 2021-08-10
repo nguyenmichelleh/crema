@@ -61,6 +61,13 @@
   padding-top: 50px;
 }
 
+.ReactModal__Overlay {
+  z-index: 9000;
+  overflow: scroll;
+  font-family: 'Quicksand', sans-serif;
+  font-family: 'Work Sans', sans-serif;
+}
+
 .modalContent {
   display: flex;
 }

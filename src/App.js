@@ -10,6 +10,7 @@ import { createContext, useContext, useState } from 'react';
 import { UserContext, useUser, UserContextProvider} from "./context/userContext"
 import {Navbar, Nav, Container, Button, NavItem} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Modal from 'react-modal';
 
 
 // define outside of App so that Navbar def is not recreated each render
@@ -22,6 +23,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {  
 
+  const [user] = useUser();
+
   // set persistence if you don't want refresh to sign you out
   console.log(firebase.auth().currentUser)
 
@@ -33,6 +36,8 @@ function App() {
         <Router>
 
           <h3 className="cremaTitle">CREMA ☺</h3>
+          {user === null ? console.log("Not logged in"): console.log("Logged in")}
+
           <div className="navbarFormat">
             <Navbar>
               <Nav className="ml-auto">

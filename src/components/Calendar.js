@@ -23,7 +23,7 @@ export default function Calendar() {
     
     useEffect (() => {
 
-        // Modal.setAppElement('body');
+        // Modal.setAppElement('#root');
 
         const eventsArr = []
 
@@ -47,6 +47,16 @@ export default function Calendar() {
         )
 
     },[]) // if i only render this the first time the render after delete doesnt upate events, if i delete a second time it renders the first change?
+
+    const customStyles = {
+        content: {
+          top: '8%',
+          left: '15%',
+          right: '15%',
+          bottom: '5%',
+        //   marginRight: '-50%',
+        },
+      };
 
     let subtitle;
 
@@ -167,7 +177,7 @@ export default function Calendar() {
             for (const event in events) {
                 var eventDetails = events[event]
     
-                if (eventDetails.UID === user.UID) {
+                if ((eventDetails.UID === user.UID) && (eventInfoModal.event.id === event)) {
                     dbRef.child("events").child(eventInfoModal.event.id).remove() // this worked like two seconds ago?
                     dbRef.child("attendees").child(eventInfoModal.event.id).remove() 
                     console.log("Event deleted!")
@@ -222,7 +232,7 @@ export default function Calendar() {
             for (const event in events) { 
                 var eventDetails = events[event]
     
-                if (eventDetails.UID === user.UID) {
+                if ((eventDetails.UID === user.UID) && (eventInfoModal.event.id === event)) {
                     dbRef.child("events").child(eventInfoModal.event.id).update({
                         title: title,
                         start: start,
@@ -281,13 +291,14 @@ export default function Calendar() {
                 <br></br>
                 <Form>
                 <h4>CremaRun Scheduler</h4>
+                <br></br>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Title:</Form.Label>
                     <Form.Control
                         type="text"
                         value={title}
                         onChange={handleOnChangeTitle}
-                        placeholder="Python over Coffee" />
+                        placeholder="Python + Coffee" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Start:</Form.Label>
@@ -330,6 +341,7 @@ export default function Calendar() {
                     isOpen={eventInfoModal}
                     onAfterOpen={afterOpenModal}
                     onRequestClose={closeModal}
+                    style={customStyles}
                     contentLabel="Example Modal"
                     // ariaHideApp={false}
                     appElement={document.getElementById('app')}
@@ -337,30 +349,27 @@ export default function Calendar() {
                     <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Join CremaRun</h2>
                     <div>Are you interested in attending this event?</div>
                     <br></br>
-                    <p>{eventInfoModal === false ? 'No data available' : `Title: ${eventInfoModal.event.title}`}</p>
-                    <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
-                    <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Title:  ${eventInfoModal.event.title}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Start:  ${eventInfoModal.event.start}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `End:  ${eventInfoModal.event.end}`}</p>
                     <br></br>
-                    <Button variant="outline-dark" onClick={joinCremaRun}>Join CremaRun ✅</Button> <Button variant="outline-dark" onClick={closeModal}>No, thank you! ❎</Button>
+                    <Button variant="dark" onClick={joinCremaRun}>Join CremaRun  ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you!  ❎</Button>
 
                     <br></br>
-                    <br></br>
-                    <br></br>
-                    <p>You can only delete CremaRuns you host.</p>
-                    <Button variant="warning" onClick={deleteCremaRun}>Delete CremaRun </Button>
-
                     <br></br>
                     <br></br>
                     <br></br>
                     <Form>
-                    <h4>Update Event</h4>
+                    <h4>Update CremaRun</h4>
+                    <p>You can only modify events you host.</p>
+                    <br></br>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Title:</Form.Label>
                         <Form.Control
                             type="text"
                             value={title}
                             onChange={handleOnChangeTitle}
-                            placeholder="Python over Coffee" />
+                            placeholder="Python + Coffee" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Start:</Form.Label>
@@ -385,7 +394,15 @@ export default function Calendar() {
                             placeholder="Starbucks Shibuya Tsutaya" />
                     </Form.Group>
                     </Form>
-                    <Button variant="dark" onClick={updateCremaRun} >Update CremaRun</Button>
+                    <Button variant="secondary" onClick={updateCremaRun} >Update CremaRun</Button>
+
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <h4>Delete CremaRun</h4>
+                    <p>You can only delete events you host.</p>
+                    <Button variant="secondary" onClick={deleteCremaRun}>Delete CremaRun </Button>
 
                 </Modal>
             </div>

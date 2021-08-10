@@ -4,8 +4,9 @@ import firebase from 'firebase';
 import { UserContext, useUser, UserContextProvider} from "../context/userContext"
 import EventList from "./EventList"
 import AttendingList from "./AttendingList"
-import {Accordion, Button, Card} from 'react-bootstrap';
+import {Form, Button, Card} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Modal from 'react-modal';
 
 export default function Profile() {
 
@@ -23,6 +24,8 @@ export default function Profile() {
     
       );
     };
+
+
 
 
     const viewMyCremaRuns = () => {
@@ -94,9 +97,79 @@ export default function Profile() {
 
     }
 
-    // const updateAccount = () => {
+    const customStyles = {
+      content: {
+        top: '8%',
+        left: '15%',
+        right: '15%',
+        bottom: '5%',
+      //   marginRight: '-50%',
+      },
+    };
 
-    // }
+    let subtitle;
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+  
+    function openModal() {
+      setIsOpen(true);
+    }
+  
+    function afterOpenModal() {
+      // references are now sync'd and can be accessed.
+      subtitle.style.color = '#c9184a';
+
+    }
+  
+    function closeModal() {
+      setIsOpen(false);
+    }
+
+    const[firstName, setFirstName] = useState('');
+    const[lastName, setLastName] = useState('');
+    const[pronouns, setPronouns] = useState('');
+    const[favDrink, setFavDrink] = useState('');
+    const[favCafe, setFavCafe] = useState('');
+    const[bio, setBio] = useState('');
+
+    const handleOnChangeFirstName = (event) => {
+        setFirstName(event.target.value);
+    };
+
+    const handleOnChangeLastName = (event) => {
+        setLastName(event.target.value);
+    };
+
+    const handleOnChangePronouns = (input) => {
+        setPronouns(input.target.value);
+    };
+
+    const handleOnChangeFavDrink = (event) => {
+        setFavDrink(event.target.value);
+    };
+
+    const handleOnChangeFavCafe = (event) => {
+        setFavCafe(event.target.value);
+    };
+
+    const handleOnChangeBio = (event) => {
+        setBio(event.target.value);
+    };
+
+    const updateProfile = () => {
+
+      const userRef = firebase.database().ref("/users"); // where you push
+      // user.uid is child to user document
+      userRef.child(user.UID).set({
+          firstName: firstName,
+          lastName: lastName,
+          pronouns: pronouns,
+          favDrink: favDrink,
+          favCafe: favCafe,
+          bio: bio,
+      });
+
+      setIsOpen(false);
+  };
 
     const deleteAccount = () => {
 
@@ -138,20 +211,89 @@ export default function Profile() {
               <Card.Body>
                   <Card.Title>MyCrema Profile ☼</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{user === null ? "Please log in to view profile." : `${user.firstName} ${user.lastName}, ${user.pronouns}`}</Card.Subtitle>
+                <br></br>
                 <p>{user === null ? " " : `♡ ${user.favDrink}`}</p>
                 <p>{user === null ? " " : `♡ ${user.favCafe}`}</p>
                 <p>{user === null ? " " : `♡ ${user.bio}`}</p>
+                <br></br>
+                <Button variant="outline-secondary" onClick={openModal}>Update Profile</Button>
               </Card.Body>
             </Card>
             <br></br>
             <Button variant="outline-secondary" onClick={deleteAccount}>Delete Account</Button>
           </div>
 
+            <Modal
+              isOpen={modalIsOpen}
+              onAfterOpen={afterOpenModal}
+              onRequestClose={closeModal}
+              style={customStyles}
+              contentLabel="Example Modal"
+            >
+
+              <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Update MyCrema Profile</h2>
+              <p>Please fill out all fields in your update.  Changes will be applied during your next login.</p>
+              <br></br>
+              <Form>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>First name:</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={firstName}
+                      onChange={handleOnChangeFirstName}
+                      placeholder={user === null ? " " : `${user.firstName}`} />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Last name:</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={lastName}
+                      onChange={handleOnChangeLastName}
+                      placeholder={user === null ? " " : `${user.lastName}`} />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Pronouns:</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={pronouns}
+                      onChange={handleOnChangePronouns}
+                      placeholder={user === null ? " " : `${user.pronouns}`} />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Favorite drink:</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={favDrink}
+                      onChange={handleOnChangeFavDrink}
+                      placeholder={user === null ? " " : `${user.favDrink}`} />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Favorite cafe:</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={favCafe}
+                      onChange={handleOnChangeFavCafe}
+                      placeholder={user === null ? " " : `${user.favCafe}`} />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Bio</Form.Label>
+                  <Form.Control
+                      type="text"
+                      value={bio}
+                      onChange={handleOnChangeBio}
+                      placeholder={user === null ? " " : `${user.bio}`} />
+              </Form.Group>
+              </Form>
+              <Button variant="secondary" onClick={updateProfile} >Update</Button>
+
+              </Modal>
+
           <div className="rightHalfProfile">
             <Card style={{ width: '35rem' }}>
               <Card.Body>
                 <Card.Title>CremaRuns: Host</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Events I am hosting</Card.Subtitle>
+                <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button>
                 <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button>
                 <EventList eventsArr={myEvents}/>
               </Card.Body>
