@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { UserContext, useUser, UserContextProvider} from "../context/userContext"
 import EventList from "./EventList"
@@ -26,7 +26,79 @@ export default function Profile() {
     };
 
 
+    const [myCremaRunsVisibility, setMyCremaRunsVisibility] = useState(false)
+    const toggleViewMyCremaRuns = () => {
 
+      const eventsArr = []
+
+      const dbRef = firebase.database().ref();
+      dbRef.child("events").get().then((snapshot) => {
+  
+          console.log(snapshot.val())
+          const events = snapshot.val()
+  
+          for (const event in events) {
+              const singleEvent = {}
+              var eventDetails = events[event]
+  
+              if (eventDetails.UID === user.UID) {
+                singleEvent["id"] = event
+                singleEvent["title"] = eventDetails.title
+                singleEvent["start"] = eventDetails.start 
+                singleEvent["end"] = eventDetails.end
+                singleEvent["location"] = eventDetails.location
+                singleEvent["numAttending"] = Object.values(eventDetails.attendees).length - 1
+                eventsArr.push(singleEvent)
+
+                console.log(singleEvent)
+
+
+              }
+          }
+
+          setMyEvents(eventsArr)
+          console.log(eventsArr)
+
+      }
+      )
+
+      setMyCremaRunsVisibility(!myCremaRunsVisibility)
+
+    }
+
+    const [runsAttendingVisibility, setRunsAttendingVisibility] = useState(false)
+    const toggleViewRunsAttending = () => {
+
+      const dbRef = firebase.database().ref();
+
+      dbRef.child('attendees').orderByChild(user.UID).equalTo(true).on("value", function(snapshot) {
+        console.log(snapshot.val()); // object of objects, all {eventIDs: {userIDs..}}
+        snapshot.forEach(function(data) {
+            console.log(data.key); // all eventIDs
+        });
+
+        // setEventsAttending(Object.keys(snapshot.val())) // array of all eventIDs
+      
+      const eventsAttendingArr = []
+
+      const eventIDs = Object.keys(snapshot.val()) // array of all eventIDs
+
+      eventIDs.map(id => {
+        return dbRef.child('events').child(id).on('value', function(snapshot) {
+            console.log(snapshot.val());
+            eventsAttendingArr.push(snapshot.val())
+            setEventsAttending(eventsAttendingArr)
+            console.log(eventsAttending)
+
+        })
+
+      });
+
+    });
+
+      setRunsAttendingVisibility(!runsAttendingVisibility)
+
+    }
 
     const viewMyCremaRuns = () => {
 
@@ -293,9 +365,10 @@ export default function Profile() {
               <Card.Body>
                 <Card.Title>CremaRuns: Host</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Events I am hosting</Card.Subtitle>
-                <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button>
-                <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button>
-                <EventList eventsArr={myEvents}/>
+                {/* <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button> */}
+                <Button variant="dark" onClick={toggleViewMyCremaRuns} >View/Hide CremaRuns</Button>
+                {/* <EventList eventsArr={myEvents}/> */}
+                <p>{myCremaRunsVisibility ? <EventList eventsArr={myEvents}/> : " "}</p>
               </Card.Body>
             </Card>
             <br></br>
@@ -303,8 +376,10 @@ export default function Profile() {
               <Card.Body>
                 <Card.Title>CremaRuns: Attendee</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Events I'd like to attend</Card.Subtitle>
-                <Button variant="dark" onClick={viewRunsAttending} >View CremaRuns</Button>
-                <AttendingList eventsArr ={eventsAttending}/>
+                {/* <Button variant="dark" onClick={viewRunsAttending} >View CremaRuns</Button> */}
+                {/* <AttendingList eventsArr ={eventsAttending}/> */}
+                <Button variant="dark" onClick={toggleViewRunsAttending} >View/Hide CremaRuns</Button>
+                <p>{runsAttendingVisibility ? <AttendingList eventsArr={eventsAttending}/> : " "}</p>
               </Card.Body>
             </Card>
 
