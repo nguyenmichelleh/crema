@@ -11,12 +11,14 @@ import Modal from 'react-modal';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 export default function Calendar() {
 
     const [user] = useUser();
     const[events, setEvents] = useState([])
     // open modal based on event info
     const [eventInfoModal, setEventInfoModal] = React.useState(false);
+    const [eventLocation, setEventLocation] = useState('');
 
     // Modal.setAppElement('body');
 
@@ -63,9 +65,28 @@ export default function Calendar() {
     const calendarAlert = (info) => {
         console.log(info)
         setEventInfoModal(info);
+
+        const dbRef = firebase.database().ref();
+
+        dbRef.child("events").get().then((snapshot) => {
+        
+            const events = snapshot.val()
+        
+            for (const event in events) { 
+                var eventDetails = events[event]
+        
+                if (info.event.id === event) {
+                    setEventLocation(eventDetails.location)
+                }
+
+            }
+        
+        }
+        )
+        
     }
   
-  
+
     function afterOpenModal() {
       // references are now sync'd and can be accessed.
       subtitle.style.color = '#c9184a';
@@ -344,14 +365,15 @@ export default function Calendar() {
                     style={customStyles}
                     contentLabel="Example Modal"
                     // ariaHideApp={false}
-                    appElement={document.getElementById('app')}
+                    // appElement={document.getElementById('app')}
                 >
                     <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Join CremaRun</h2>
                     <div>Are you interested in attending this event?</div>
                     <br></br>
-                    <p>{eventInfoModal === false ? 'No data available' : `Title:  ${eventInfoModal.event.title}`}</p>
-                    <p>{eventInfoModal === false ? 'No data available' : `Start:  ${eventInfoModal.event.start}`}</p>
-                    <p>{eventInfoModal === false ? 'No data available' : `End:  ${eventInfoModal.event.end}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Title: ${eventInfoModal.event.title}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Location: ${eventLocation}`}</p>
                     <br></br>
                     <Button variant="dark" onClick={joinCremaRun}>Join CremaRun  ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you!  ❎</Button>
 

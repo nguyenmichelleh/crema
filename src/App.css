@@ -105,9 +105,14 @@
 
 .rightHalfProfile {
   flex: 1;
-  padding-top: 25px;
+  padding-top: 47px;
   padding-left: 30px;
   padding-right:50px;
+}
+
+.deleteButton {
+  padding-left: 410px;
+  padding-bottom: 25px;
 }
 
 .leftHalfCalendar {

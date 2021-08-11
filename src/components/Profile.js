@@ -292,7 +292,6 @@ export default function Profile() {
               </Card.Body>
             </Card>
             <br></br>
-            <Button variant="outline-secondary" onClick={deleteAccount}>Delete Account</Button>
           </div>
 
             <Modal
@@ -365,6 +364,7 @@ export default function Profile() {
               <Card.Body>
                 <Card.Title>CremaRuns: Host</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Events I am hosting</Card.Subtitle>
+                <br></br>
                 {/* <Button variant="dark" onClick={viewMyCremaRuns} >View CremaRuns</Button> */}
                 <Button variant="dark" onClick={toggleViewMyCremaRuns} >View/Hide CremaRuns</Button>
                 {/* <EventList eventsArr={myEvents}/> */}
@@ -376,13 +376,18 @@ export default function Profile() {
               <Card.Body>
                 <Card.Title>CremaRuns: Attendee</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Events I'd like to attend</Card.Subtitle>
+                <br></br>
                 {/* <Button variant="dark" onClick={viewRunsAttending} >View CremaRuns</Button> */}
                 {/* <AttendingList eventsArr ={eventsAttending}/> */}
                 <Button variant="dark" onClick={toggleViewRunsAttending} >View/Hide CremaRuns</Button>
                 <p>{runsAttendingVisibility ? <AttendingList eventsArr={eventsAttending}/> : " "}</p>
               </Card.Body>
             </Card>
+            <br></br>
 
+            <div className="deleteButton">
+              <Button variant="outline-secondary" onClick={deleteAccount}>Delete Account</Button>
+            </div>
 
           </div>
 
