@@ -83,6 +83,7 @@ export default function SignInForm() {
 
 
     const signIn = () => {
+        
 
         firebase.auth().signInWithEmailAndPassword(newUser.email, newUser.password)
             .then((userCredential) => {

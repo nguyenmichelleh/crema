@@ -10,6 +10,13 @@ import listPlugin from '@fullcalendar/list'
 import Modal from 'react-modal';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+//
+import PlacesAutocomplete from 'react-places-autocomplete';
+import {
+    geocodeByAddress,
+    geocodeByPlaceId,
+    getLatLng,
+  } from 'react-places-autocomplete';
 
 
 export default function Calendar() {
@@ -19,6 +26,7 @@ export default function Calendar() {
     // open modal based on event info
     const [eventInfoModal, setEventInfoModal] = React.useState(false);
     const [eventLocation, setEventLocation] = useState('');
+    const [eventPhysicalLocation, setPhysicalLocation] = useState('');
 
     // Modal.setAppElement('body');
 
@@ -77,6 +85,7 @@ export default function Calendar() {
         
                 if (info.event.id === event) {
                     setEventLocation(eventDetails.location)
+                    setPhysicalLocation(eventDetails.address)
                 }
 
             }
@@ -148,7 +157,8 @@ export default function Calendar() {
             title: title,
             start: start,
             end: end,
-            location: location,
+            location: inputAddress,
+            address: eventAddress,
             attendees: currentUserObj
         });
 
@@ -170,7 +180,8 @@ export default function Calendar() {
                 singleEvent["title"] = eventDetails.title
                 singleEvent["start"] = eventDetails.start
                 singleEvent["end"] = eventDetails.end
-                singleEvent["location"] = eventDetails.location
+                singleEvent["location"] = eventDetails.inputAddress
+                singleEvent["address"] = eventDetails.eventAddress
                 eventsArr.push(singleEvent)
 
             }
@@ -258,7 +269,8 @@ export default function Calendar() {
                         title: title,
                         start: start,
                         end: end,
-                        location: location,
+                        location: inputAddress,
+                        address: eventAddress
                     })
 
                     console.log("Event updated!")
@@ -289,6 +301,31 @@ export default function Calendar() {
         }
         )
     };
+
+    // autocomplete stuff
+
+    // const placesCustomStyles = {
+    //     content: {
+    //       border
+    //     },
+    //   };
+
+    const [inputAddress, setInputAddress] = React.useState("");
+    const [eventAddress, setEventAddress] = React.useState("");
+    
+    const handleSelect = async (value) => {
+        const result = await geocodeByAddress(value)
+        
+        for (const key in result) {
+            var item = result[key]
+
+            setEventAddress(item.formatted_address)
+            setInputAddress(value)
+
+        }
+
+    }
+
 
 
       return (
@@ -335,16 +372,45 @@ export default function Calendar() {
                         value={end}
                         onChange={handleOnChangeEnd} />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Location:</Form.Label>
                     <Form.Control
                         type="text"
                         value={location}
                         onChange={handleOnChangeLocation}
                         placeholder="Starbucks Shibuya Tsutaya" />
-                </Form.Group>
+                </Form.Group> */}
                 </Form>
+
+                <p>Location: </p>
+                <PlacesAutocomplete 
+                    value={inputAddress}
+                    onChange={setInputAddress}
+                    onSelect={handleSelect}
+                    // style={placesCustomStyles}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
+                            <div>
+
+                                <input {...getInputProps({ placeholder: "Search" })} />
+                                <div>{loading ? '...looking around' : null}</div>
+                                
+                                {suggestions.map((suggestion) => {
+                                    const style = {
+                                        backgroundColor: suggestion.active ? "#fae1dd" : "#fcd5ce"
+                                    }
+                                    return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
+                                })}
+                                
+                                <p className="addressText"><em>{eventAddress}</em></p>
+
+                            </div> 
+                        )}
+                </PlacesAutocomplete>
+
                 <Button variant="dark" onClick={addCremaRun} >Add CremaRun</Button>
+
+
             </div>
             
             <div className="rightHalfCalendar">
@@ -374,6 +440,7 @@ export default function Calendar() {
                     <p>{eventInfoModal === false ? 'No data available' : `Start: ${eventInfoModal.event.start}`}</p>
                     <p>{eventInfoModal === false ? 'No data available' : `End: ${eventInfoModal.event.end}`}</p>
                     <p>{eventInfoModal === false ? 'No data available' : `Location: ${eventLocation}`}</p>
+                    <p>{eventInfoModal === false ? 'No data available' : `Address: ${eventPhysicalLocation}`}</p>
                     <br></br>
                     <Button variant="dark" onClick={joinCremaRun}>Join CremaRun  ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you!  ❎</Button>
 
@@ -391,7 +458,7 @@ export default function Calendar() {
                             type="text"
                             value={title}
                             onChange={handleOnChangeTitle}
-                            placeholder="Python + Coffee" />
+                            placeholder={eventInfoModal === false ? 'No data available' : `${eventInfoModal.event.title}`} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Start:</Form.Label>
@@ -407,15 +474,39 @@ export default function Calendar() {
                             value={end}
                             onChange={handleOnChangeEnd} />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Location:</Form.Label>
                         <Form.Control
                             type="text"
                             value={location}
                             onChange={handleOnChangeLocation}
                             placeholder="Starbucks Shibuya Tsutaya" />
-                    </Form.Group>
+                    </Form.Group> */}
                     </Form>
+
+                    <p>Location: </p>
+                    <PlacesAutocomplete 
+                        value={inputAddress}
+                        onChange={setInputAddress}
+                        onSelect={handleSelect}
+                        >
+                            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
+                                <div>
+
+                                    <input {...getInputProps({ placeholder: `${eventLocation}` })} />
+                                    <div>{loading ? '...looking around' : null}</div>
+                                    
+                                    {suggestions.map((suggestion) => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#fae1dd" : "#fcd5ce"
+                                        }
+                                        return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
+                                    })}
+
+                                </div> 
+                            )}
+                    </PlacesAutocomplete>
+                    <br></br>
                     <Button variant="secondary" onClick={updateCremaRun} >Update CremaRun</Button>
 
                     <br></br>

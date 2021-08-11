@@ -71,6 +71,10 @@
   padding-top: 50px;
 }
 
+.addressText {
+  color: gray;
+}
+
 .ReactModal__Overlay {
   z-index: 9000;
   overflow: scroll;

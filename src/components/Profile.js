@@ -81,6 +81,10 @@ export default function Profile() {
       
       const eventsAttendingArr = []
 
+      
+      if (snapshot.val() === null) {
+        return setEventsAttending(eventsAttendingArr)
+      }
       const eventIDs = Object.keys(snapshot.val()) // array of all eventIDs
 
       eventIDs.map(id => {
