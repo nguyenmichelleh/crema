@@ -105,16 +105,53 @@ export default function Calendar() {
       setEventInfoModal(false);
     }
 
+    const [userEventStatus, setUserEventStatus] = useState(false)
+
     const joinCremaRun = () => {
 
-        const userID = user.UID
-        const test = {}
-        test[userID] = true
-        const userRef = firebase.database().ref("/attendees");
-        userRef.child(eventInfoModal.event.id).update(test);
-
         const testRef = firebase.database().ref("/events")
-        testRef.child(eventInfoModal.event.id).child("attendees").update(test);
+        testRef.child(eventInfoModal.event.id).child("attendees").get().then((snapshot) => {
+            const attendeesAndUser = snapshot.val()
+
+            for (const attendeeID in attendeesAndUser) {
+
+                if (attendeeID === user.UID) {
+                    
+                    setUserEventStatus(true);
+                    console.log("I found me!")
+
+                }
+            }
+        });
+
+        if (userEventStatus === false) {
+
+            const userID = user.UID
+            const test = {}
+            test[userID] = true
+
+            const userRef = firebase.database().ref("/attendees");
+            userRef.child(eventInfoModal.event.id).update(test);
+
+            const testRef = firebase.database().ref("/events")
+            testRef.child(eventInfoModal.event.id).child("attendees").update(test);
+            console.log("Joined!")
+
+        } else {
+            console.log("You made this")
+        }
+
+
+
+        // const userID = user.UID
+        // const test = {}
+        // test[userID] = true
+
+        // const userRef = firebase.database().ref("/attendees");
+        // userRef.child(eventInfoModal.event.id).update(test);
+
+        // const testRef = firebase.database().ref("/events")
+        // testRef.child(eventInfoModal.event.id).child("attendees").update(test);
         
         setEventInfoModal(false);
 
@@ -124,7 +161,7 @@ export default function Calendar() {
     const[title, setTitle] = useState('');
     const[start, setStart] = useState('');
     const[end, setEnd] = useState('');
-    const[location, setLocation] = useState('');
+    // const[location, setLocation] = useState('');
 
     const handleOnChangeTitle = (event) => {
         setTitle(event.target.value);
@@ -138,9 +175,9 @@ export default function Calendar() {
         setEnd(event.target.value);
     };
 
-    const handleOnChangeLocation= (input) => {
-        setLocation(input.target.value);
-    }
+    // const handleOnChangeLocation= (input) => {
+    //     setLocation(input.target.value);
+    // }
     
 
     const addCremaRun = () => {
@@ -247,6 +284,23 @@ export default function Calendar() {
 
     };
 
+
+    const[updatedTitle, setUpdatedTitle] = useState('');
+    const[updatedStart, setUpdatedStart] = useState('');
+    const[updatedEnd, setUpdatedEnd] = useState('');
+
+    const handleOnChangeUpdatedTitle = (event) => {
+        setUpdatedTitle(event.target.value);
+    };
+
+    const handleOnChangeUpdatedStart = (event) => {
+        setUpdatedStart(event.target.value);
+    };
+
+    const handleOnChangeUpdatedEnd = (event) => {
+        setUpdatedEnd(event.target.value);
+    };
+
     const updateCremaRun = () => {
         
         // 1. obtain info for clicked event
@@ -266,11 +320,11 @@ export default function Calendar() {
     
                 if ((eventDetails.UID === user.UID) && (eventInfoModal.event.id === event)) {
                     dbRef.child("events").child(eventInfoModal.event.id).update({
-                        title: title,
-                        start: start,
-                        end: end,
-                        location: inputAddress,
-                        address: eventAddress
+                        title: updatedTitle,
+                        start: updatedStart,
+                        end: updatedEnd,
+                        location: updatedInputAddress,
+                        address: updatedEventAddress
                     })
 
                     console.log("Event updated!")
@@ -321,6 +375,22 @@ export default function Calendar() {
 
             setEventAddress(item.formatted_address)
             setInputAddress(value)
+
+        }
+
+    }
+
+    const [updatedInputAddress, setUpdatedInputAddress] = React.useState("");
+    const [updatedEventAddress, setUpdatedEventAddress] = React.useState("");
+    
+    const handleUpdatedSelect = async (value) => {
+        const result = await geocodeByAddress(value)
+        
+        for (const key in result) {
+            var item = result[key]
+
+            setUpdatedEventAddress(item.formatted_address)
+            setUpdatedInputAddress(value)
 
         }
 
@@ -456,23 +526,23 @@ export default function Calendar() {
                         <Form.Label>Title:</Form.Label>
                         <Form.Control
                             type="text"
-                            value={title}
-                            onChange={handleOnChangeTitle}
+                            value={updatedTitle}
+                            onChange={handleOnChangeUpdatedTitle}
                             placeholder={eventInfoModal === false ? 'No data available' : `${eventInfoModal.event.title}`} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Start:</Form.Label>
                         <Form.Control
                             type="datetime-local"
-                            value={start}
-                            onChange={handleOnChangeStart} />
+                            value={updatedStart}
+                            onChange={handleOnChangeUpdatedStart} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>End:</Form.Label>
                         <Form.Control
                             type="datetime-local"
-                            value={end}
-                            onChange={handleOnChangeEnd} />
+                            value={updatedEnd}
+                            onChange={handleOnChangeUpdatedEnd} />
                     </Form.Group>
                     {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Location:</Form.Label>
@@ -486,9 +556,9 @@ export default function Calendar() {
 
                     <p>Location: </p>
                     <PlacesAutocomplete 
-                        value={inputAddress}
-                        onChange={setInputAddress}
-                        onSelect={handleSelect}
+                        value={updatedInputAddress}
+                        onChange={setUpdatedInputAddress}
+                        onSelect={handleUpdatedSelect}
                         >
                             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
                                 <div>

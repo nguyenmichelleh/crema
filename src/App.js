@@ -8,7 +8,7 @@ import LoggedInNavbar from "./components/LoggedInNavbar";
 import LoggedOutNavbar from "./components/LoggedOutNavbar"
 import firebase from 'firebase';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"; 
-import { createContext, useContext, useState } from 'react';
+import { useEffect, createContext, useContext, useState } from 'react';
 import { UserContext, useUser, UserContextProvider} from "./context/userContext"
 import {Navbar, Nav, Container, Button, NavItem} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,6 +25,16 @@ import Modal from 'react-modal';
 const ConditionalNavbar = () => {
 
   const [user] = useUser();
+  // const[currentUser, setUser] = useUser()
+
+  // useEffect (() => {
+
+  //   firebase.auth().onAuthStateChanged(function(user) {
+  //     this.setState({ user: user });
+  //   });
+
+  // }, [])
+
 
   return (
 

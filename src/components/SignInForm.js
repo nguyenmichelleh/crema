@@ -25,6 +25,19 @@ export default function SignInForm() {
         })
     }
 
+    const[cremaUser, setCremaUser] = React.useState({
+        email: "",
+        password: ""
+    });
+
+    function handleOnChangeCremaUser(event) {
+        const value = event.target.value;
+        setCremaUser({
+            ...cremaUser,
+            [event.target.name]: value
+        })
+    }
+
     const[firstName, setFirstName] = useState('');
     const[lastName, setLastName] = useState('');
     const[pronouns, setPronouns] = useState('');
@@ -78,17 +91,26 @@ export default function SignInForm() {
             var errorMessage = error.message;
             // ..
             });
+
+        setNewUser({
+            email: "",
+            password: ""
+        })
+
+        setFirstName("")
+        setLastName("")
+        setPronouns("")
+        setFavDrink("")
+        setBio("")
     
     }
 
 
     const signIn = () => {
-        
 
-        firebase.auth().signInWithEmailAndPassword(newUser.email, newUser.password)
+        firebase.auth().signInWithEmailAndPassword(cremaUser.email, cremaUser.password)
             .then((userCredential) => {
             var user = userCredential.user;
-
 
             const dbRef = firebase.database().ref();
             dbRef.child("users").child(userCredential.user.uid).get().then((snapshot) => {
@@ -158,8 +180,8 @@ export default function SignInForm() {
                         <Form.Control
                             type="text"
                             name="email"
-                            value={newUser.email}
-                            onChange={handleOnChangeNewUser}
+                            value={cremaUser.email}
+                            onChange={handleOnChangeCremaUser}
                             placeholder="name@example.com" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -167,8 +189,8 @@ export default function SignInForm() {
                         <Form.Control
                             type="text"
                             name="password"
-                            value={newUser.password}
-                            onChange={handleOnChangeNewUser}
+                            value={cremaUser.password}
+                            onChange={handleOnChangeCremaUser}
                             placeholder="******" />
                     </Form.Group>
                     </Form>
