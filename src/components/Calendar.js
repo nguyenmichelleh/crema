@@ -462,7 +462,10 @@ export default function Calendar() {
                         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
                             <div>
 
-                                <input {...getInputProps({ placeholder: "Search" })} />
+                                <input {...getInputProps({ 
+                                    placeholder: "Search",
+                                    className: 'searchInput',
+                                    })} />
                                 <div>{loading ? '...looking around' : null}</div>
                                 
                                 {suggestions.map((suggestion) => {
@@ -563,7 +566,10 @@ export default function Calendar() {
                             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
                                 <div>
 
-                                    <input {...getInputProps({ placeholder: `${eventLocation}` })} />
+                                    <input {...getInputProps({ 
+                                        placeholder: "Search",
+                                        className: 'searchInput',
+                                    })} />
                                     <div>{loading ? '...looking around' : null}</div>
                                     
                                     {suggestions.map((suggestion) => {
