@@ -104,74 +104,74 @@ export default function Profile() {
 
     }
 
-    const viewMyCremaRuns = () => {
+    // const viewMyCremaRuns = () => {
 
-      const eventsArr = []
+    //   const eventsArr = []
 
-      const dbRef = firebase.database().ref();
-      dbRef.child("events").get().then((snapshot) => {
+    //   const dbRef = firebase.database().ref();
+    //   dbRef.child("events").get().then((snapshot) => {
   
-          console.log(snapshot.val())
-          const events = snapshot.val()
+    //       console.log(snapshot.val())
+    //       const events = snapshot.val()
   
-          for (const event in events) {
-              const singleEvent = {}
-              var eventDetails = events[event]
+    //       for (const event in events) {
+    //           const singleEvent = {}
+    //           var eventDetails = events[event]
   
-              if (eventDetails.UID === user.UID) {
-                singleEvent["id"] = event
-                singleEvent["title"] = eventDetails.title
-                singleEvent["start"] = eventDetails.start 
-                singleEvent["end"] = eventDetails.end
-                singleEvent["location"] = eventDetails.location
-                singleEvent["numAttending"] = Object.values(eventDetails.attendees).length - 1
-                eventsArr.push(singleEvent)
+    //           if (eventDetails.UID === user.UID) {
+    //             singleEvent["id"] = event
+    //             singleEvent["title"] = eventDetails.title
+    //             singleEvent["start"] = eventDetails.start 
+    //             singleEvent["end"] = eventDetails.end
+    //             singleEvent["location"] = eventDetails.location
+    //             singleEvent["numAttending"] = Object.values(eventDetails.attendees).length - 1
+    //             eventsArr.push(singleEvent)
 
-                console.log(singleEvent)
+    //             console.log(singleEvent)
 
 
-              }
-          }
+    //           }
+    //       }
 
-          setMyEvents(eventsArr)
-          console.log(eventsArr)
+    //       setMyEvents(eventsArr)
+    //       console.log(eventsArr)
 
-      }
-      )
+    //   }
+    //   )
 
       
-    }
+    // }
 
-    const viewRunsAttending = () => {
+    // const viewRunsAttending = () => {
 
-      const dbRef = firebase.database().ref();
+    //   const dbRef = firebase.database().ref();
 
-      dbRef.child('attendees').orderByChild(user.UID).equalTo(true).on("value", function(snapshot) {
-        console.log(snapshot.val()); // object of objects, all {eventIDs: {userIDs..}}
-        snapshot.forEach(function(data) {
-            console.log(data.key); // all eventIDs
-        });
+    //   dbRef.child('attendees').orderByChild(user.UID).equalTo(true).on("value", function(snapshot) {
+    //     console.log(snapshot.val()); // object of objects, all {eventIDs: {userIDs..}}
+    //     snapshot.forEach(function(data) {
+    //         console.log(data.key); // all eventIDs
+    //     });
 
-        // setEventsAttending(Object.keys(snapshot.val())) // array of all eventIDs
+    //     // setEventsAttending(Object.keys(snapshot.val())) // array of all eventIDs
       
-      const eventsAttendingArr = []
+    //   const eventsAttendingArr = []
 
-      const eventIDs = Object.keys(snapshot.val()) // array of all eventIDs
+    //   const eventIDs = Object.keys(snapshot.val()) // array of all eventIDs
 
-      eventIDs.map(id => {
-        return dbRef.child('events').child(id).on('value', function(snapshot) {
-            console.log(snapshot.val());
-            eventsAttendingArr.push(snapshot.val())
-            setEventsAttending(eventsAttendingArr)
-            console.log(eventsAttending)
+    //   eventIDs.map(id => {
+    //     return dbRef.child('events').child(id).on('value', function(snapshot) {
+    //         console.log(snapshot.val());
+    //         eventsAttendingArr.push(snapshot.val())
+    //         setEventsAttending(eventsAttendingArr)
+    //         console.log(eventsAttending)
 
-        })
+    //     })
 
-      });
+    //   });
 
-    });
+    // });
 
-    }
+    // }
 
     const customStyles = {
       content: {
@@ -277,6 +277,8 @@ export default function Profile() {
 
 
     return (
+
+      <div>
         
         <div className="profileFormat">
 
@@ -295,7 +297,7 @@ export default function Profile() {
                 <Button variant="outline-secondary" onClick={openModal}>Update Profile</Button>
               </Card.Body>
             </Card>
-            <br></br>
+
           </div>
 
             <Modal
@@ -394,8 +396,11 @@ export default function Profile() {
             </div>
 
           </div>
-
             
+        </div>
+
+        <img className="friendsUnderTree" src="images/friendsUnderTree.svg" alt="two friends conversing under tree"/>
+
         </div>
     
       );

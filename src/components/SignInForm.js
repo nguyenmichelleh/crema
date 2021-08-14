@@ -109,28 +109,30 @@ export default function SignInForm() {
     const signIn = () => {
 
         firebase.auth().signInWithEmailAndPassword(cremaUser.email, cremaUser.password)
-            .then((userCredential) => {
-            var user = userCredential.user;
+            // .then((userCredential) => {
+            // var user = userCredential.user;
 
-            const dbRef = firebase.database().ref();
-            dbRef.child("users").child(userCredential.user.uid).get().then((snapshot) => {
-            if (snapshot.exists()) {
+            // console.log(JSON.stringify(userCredential.user))
 
-                const userSnapshot = snapshot.val()
-                userSnapshot["UID"] = userCredential.user.uid
-                setUser(userSnapshot)
+            // const dbRef = firebase.database().ref();
+            // dbRef.child("users").child(userCredential.user.uid).get().then((snapshot) => {
+            // if (snapshot.exists()) {
 
-            } else {
-                console.log("No data available");
-            }
-            }).catch((error) => {
-            console.error(error);
-            });
-            })
-            .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            });
+            //     const userSnapshot = snapshot.val()
+            //     userSnapshot["UID"] = userCredential.user.uid
+            //     setUser(userSnapshot)
+
+            // } else {
+            //     console.log("No data available");
+            // }
+            // }).catch((error) => {
+            // console.error(error);
+            // });
+            // })
+            // .catch((error) => {
+            // var errorCode = error.code;
+            // var errorMessage = error.message;
+            // });
     
     };
 
@@ -152,7 +154,7 @@ export default function SignInForm() {
     if (currentUser !== null) {
         return (
             <div className="loginSuccess">
-                <div>{user === null ? '': `Welcome to Crema.  You're logged in, ${user.firstName}.`}</div>
+                <div>{user === null ? '': `You're logged in, ${user.firstName}.`}</div>
                 <br></br>
                 <Button variant="outline-secondary" onClick={signOut}>Log Out</Button>
             </div>
@@ -201,7 +203,7 @@ export default function SignInForm() {
                     <br></br>
                     <br></br>
                     <br></br>
-                    <p><em>In today's day and age, making new friends and maintaining meaningful relationships can be hard.  Face-to-face interactions have become less the more convenient technology becomes.  Crema aims to use technology in our favor.  Studies have shown that offline social interactions are incredibly important to an individual's mental and physical health.  Instead of going out for coffee or boba on your own, Crema aims to connect folks while they are already actively out and about doing something they enjoy.</em></p>
+                    <img className="friendOpeningShutters" src="images/friendOpeningShutters.svg" alt="friend opening shutters with welcoming expression"/>
             </div>
 
              
@@ -273,7 +275,7 @@ export default function SignInForm() {
                         type="text"
                         value={pronouns}
                         onChange={handleOnChangePronouns}
-                        placeholder="no pronouns" />
+                        placeholder="No pronouns" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Favorite drink:</Form.Label>
@@ -281,7 +283,7 @@ export default function SignInForm() {
                         type="text"
                         value={favDrink}
                         onChange={handleOnChangeFavDrink}
-                        placeholder="iced mocha" />
+                        placeholder="Iced mocha" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Favorite cafe:</Form.Label>
@@ -292,18 +294,18 @@ export default function SignInForm() {
                         placeholder="Seattle Coffee Works" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>Bio</Form.Label>
+                    <Form.Label>Bio:</Form.Label>
                     <Form.Control
                         type="text"
                         value={bio}
                         onChange={handleOnChangeBio}
-                        placeholder="Anything else you'd like to share?  Allergies? :)" />
+                        placeholder="Anything else you'd like to share?  Allergies?" />
                 </Form.Group>
                 </Form>
 
                 <Button variant="dark" onClick={createUser} >Create Account</Button>
                 <br></br>
-                <p>Hit 'Create Account', then log in using the form to the left!</p>
+                {/* <p>Hit 'Create Account', then log in using the form to the left!</p> */}
                 <br></br>
                 <br></br>
 

@@ -24,21 +24,36 @@ import Modal from 'react-modal';
 
 const ConditionalNavbar = () => {
 
-  const [user] = useUser();
-  // const[currentUser, setUser] = useUser()
+  // const [user] = useUser();
+  const[currentUser, setUser] = useUser()
 
-  // useEffect (() => {
+  useEffect (() => {
 
-  //   firebase.auth().onAuthStateChanged(function(user) {
-  //     this.setState({ user: user });
-  //   });
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log(`onAuthStateChanged ${JSON.stringify(user)}`)
+      // if user !== null (which means Firebase knows Mariela is signed in)
+      // then sign in Mariela via the app
 
-  // }, [])
+      if (user !== null) { // firebase user state
 
+      const dbRef = firebase.database().ref(); // all app sign in for user
+      dbRef.child("users").child(user.uid).get().then((snapshot) => {
+        if (snapshot.exists()) {
+
+            const userSnapshot = snapshot.val()
+            userSnapshot["UID"] = user.uid
+            setUser(userSnapshot)
+
+      };
+      
+    })
+
+      }
+    })}, []) // alternative is setUser
 
   return (
 
-      <div>{user === null ? <LoggedOutNavbar/> : <LoggedInNavbar/>}</div>
+      <div>{ currentUser === null ? <LoggedOutNavbar/> : <LoggedInNavbar/>}</div> // if things start to misalign reinstantiate user and pass here as currentUser
 
   )
   

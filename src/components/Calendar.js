@@ -105,54 +105,35 @@ export default function Calendar() {
       setEventInfoModal(false);
     }
 
-    const [userEventStatus, setUserEventStatus] = useState(false)
 
     const joinCremaRun = () => {
 
         const testRef = firebase.database().ref("/events")
-        testRef.child(eventInfoModal.event.id).child("attendees").get().then((snapshot) => {
-            const attendeesAndUser = snapshot.val()
+        testRef.child(eventInfoModal.event.id).get().then((snapshot) => {
 
-            for (const attendeeID in attendeesAndUser) {
+            const eventDetails = snapshot.val()
+            console.log(snapshot.val().UID)
 
-                if (attendeeID === user.UID) {
-                    
-                    setUserEventStatus(true);
-                    console.log("I found me!")
+            if (eventDetails.UID === user.UID) {
+                console.log("Cannot join, you created this event");
+            } else {
 
-                }
+                const userID = user.UID
+                const test = {}
+                test[userID] = true
+    
+                const userRef = firebase.database().ref("/attendees");
+                userRef.child(eventInfoModal.event.id).update(test);
+    
+                const testRef = firebase.database().ref("/events");
+                testRef.child(eventInfoModal.event.id).child("attendees").update(test);
+
+                console.log("Event joined!")
+
             }
+
         });
 
-        if (userEventStatus === false) {
-
-            const userID = user.UID
-            const test = {}
-            test[userID] = true
-
-            const userRef = firebase.database().ref("/attendees");
-            userRef.child(eventInfoModal.event.id).update(test);
-
-            const testRef = firebase.database().ref("/events")
-            testRef.child(eventInfoModal.event.id).child("attendees").update(test);
-            console.log("Joined!")
-
-        } else {
-            console.log("You made this")
-        }
-
-
-
-        // const userID = user.UID
-        // const test = {}
-        // test[userID] = true
-
-        // const userRef = firebase.database().ref("/attendees");
-        // userRef.child(eventInfoModal.event.id).update(test);
-
-        // const testRef = firebase.database().ref("/events")
-        // testRef.child(eventInfoModal.event.id).child("attendees").update(test);
-        
         setEventInfoModal(false);
 
     };
@@ -227,6 +208,11 @@ export default function Calendar() {
 
         }
         )
+
+        // setTitle("")
+        // setStart("")
+        // setEnd("")
+
     };
 
     const deleteCremaRun = () => {
@@ -515,7 +501,7 @@ export default function Calendar() {
                     <p>{eventInfoModal === false ? 'No data available' : `Location: ${eventLocation}`}</p>
                     <p>{eventInfoModal === false ? 'No data available' : `Address: ${eventPhysicalLocation}`}</p>
                     <br></br>
-                    <Button variant="dark" onClick={joinCremaRun}>Join CremaRun  ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you!  ❎</Button>
+                    <Button variant="dark" onClick={joinCremaRun}>Join CremaRun  ✅</Button> <Button variant="dark" onClick={closeModal}>No, thank you  ❎</Button>
 
                     <br></br>
                     <br></br>
