@@ -353,7 +353,7 @@ export default function Profile() {
                       placeholder={user === null ? " " : `${user.favCafe}`} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Bio</Form.Label>
+                  <Form.Label>Bio:</Form.Label>
                   <Form.Control
                       type="text"
                       value={bio}

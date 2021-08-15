@@ -7,6 +7,8 @@
     "@fullcalendar/interaction": "^5.9.0",
     "@fullcalendar/list": "^5.9.0",
     "@fullcalendar/react": "^5.9.0",
+    "@reach/combobox": "^0.16.1",
+    "@react-google-maps/api": "^2.2.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -14,6 +16,7 @@
     "babel-plugin-inline-dotenv": "^1.6.0",
     "boostrap": "^2.0.0",
     "bootstrap": "^5.1.0",
+    "date-fns": "^2.23.0",
     "dotenv": "^8.2.0",
     "firebase": "^8.8.0",
     "fullcalendar": "^5.9.0",
@@ -26,6 +29,7 @@
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "use-places-autocomplete": "^1.9.4",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
