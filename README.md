@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# Crema
+React-Firebase web app featuring shared calendar and map resources to connect individuals with preexisting cafe plans.  Crema is aimed at facilitating offline social interaction.  Studies show that individuals with "social health" exhibit greater mental and physical wellbeing.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
 
-## Available Scripts
+#### Shared calendar
+- Create, read, update, or delete events (CremaRun)
+- CremaRuns cannot be modified by users other than event creator/host
 
-In the project directory, you can run:
+#### User profile
+- Create, read, update, or delete personal profile
+- View details of events in which the user is the host
+- View details of events user would like to attend
 
-### `yarn start`
+#### Google Places & Maps APIs
+- Support finding cafe locations
+- Places autocomplete suggests locations, populates physical address
+- Map for visualization of location area
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Dependencies
+    - firebase
+    - fullcalendar
+    - react-google-maps
+    - react-places-autocompletea
+    - use-places-autocomplete
+    - date-fns
+    - reach combobox
+    - react-router-dom
+    - react-modal
+    - react-bootstrap
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Environment
 
-### `yarn test`
+In addition to installing dependencies, two API keys must be obtained from the Google platform.  When creating a Firebase project, a Web API Key is generated.  This API key should be configured in an index.js file, or where the application is rendered.  A separate API key will be obtained from the Google Maps Platform. The Crema application communicates directly from a React front-end to a Firebase Realtime database.  The API key can be stored in a .env.local file, as long as the variable name begins with REACT_APP_.  Alternatively, restrictions can be managed from the Google Cloud Platform, under APIs & Services > Credentials.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
