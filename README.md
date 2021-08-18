@@ -1,5 +1,5 @@
 # Crema
-React-Firebase web app featuring shared calendar and map resources to connect individuals with preexisting cafe plans.  Crema is aimed at facilitating offline social interaction.  Studies show that individuals with "social health" exhibit greater mental and physical wellbeing.
+React-Firebase web app featuring shared calendar and map resources to connect individuals with preexisting cafe plans.  Crema is aimed at facilitating offline social interaction.  Studies have shown that individuals with "social health" exhibit greater mental and physical wellbeing.
 
 ## Features
 
